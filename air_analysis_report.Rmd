@@ -1,0 +1,75 @@
+---
+title: "air_analysis_report"
+author: "Aaron"
+date: "2026-05-10"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(ggplot2)
+```
+```{r load_data, echo = FALSE}
+data <- readRDS("C:/Users/pbj18/Desktop/Coding/Git_projects/environmental_report/data_processed/clean_data2026-05-11.rds")
+```
+# Summary by location
+```{r summary-location, echo = FALSE}
+agg_location <- data %>%
+  group_by(location) %>%
+  summarise(across(c(temp_c, pm25, pm10, no2, humidity), mean, .names = "mean_{.col}"))
+print(agg_location)
+```
+# Summary by station
+```{r summary-station, echo = FALSE}
+agg_station <- data %>%
+  group_by(station_id) %>%
+  summarise(across(c(temp_c, pm25, pm10, no2, humidity), mean, .names = "mean_{.col}"))
+print(agg_station)
+```
+
+
+# Including Plots
+## Plot of pollutants over time by location
+```{r plot-location-pollutants, echo=FALSE, message = FALSE, warning = FALSE}
+agg_location <- data %>%
+  group_by(location, date) %>%
+  summarise(across(c(pm25, pm10, no2, humidity), mean, .names = "mean_{.col}")) 
+
+agg_location_wide <- agg_location %>%
+  pivot_longer(cols = -c(location, date),
+               names_to = "variable",
+               values_to =  "value")
+
+plot_all_pollutants_temp_by_loc <- ggplot(agg_location_wide, aes(x = date, y = value, group = location, color = location)) +
+  geom_smooth() +
+  facet_wrap(~ variable, scales = "free_y") +
+  labs(title = "Pollutants Over Time by Location",
+       x = "Date",
+       y = "Pollutants",
+       color = "Locations") +
+  theme_minimal()
+
+plot_all_pollutants_temp_by_loc
+```
+
+
+
+## Plot of temperature over time by location
+```{r plot-location-temperature, echo=FALSE, message = FALSE, warning = FALSE}
+agg_location_temp <- data %>%
+  group_by(location, date) %>%
+  summarise(across(c(pm25, pm10, no2, humidity, temp_c), mean, .names = "mean_{.col}")) 
+
+
+plot_temp <- ggplot(agg_location_temp, aes(x = date, y = mean_temp_c, group = location, color = location)) +
+  geom_smooth() +
+  labs(title = "Temperature Over Time by Location",
+       x = "Date",
+       y = "Temperature in C°",
+       color = "Location") +
+  theme_minimal()
+plot_temp 
+
+```
+
