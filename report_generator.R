@@ -1,18 +1,3 @@
-# ---- INSTRUCTIONS ----
-# **Project:** Automate a monthly report for your current job or a public dataset (e.g., sales, expenses, or survey data).
-# 
-# **Steps:**
-#   
-#   1. **Data Prep:** Write an R script to clean and aggregate data.
-# 2. **Visualization:** Create visualizations with `ggplot2`.
-# 3. **Reporting:** Generate a PDF/HTML report using R Markdown.
-# 4. **Automation:** Schedule the report to run and email results (using `cron` or `taskscheduleR`).**Deliverables:**
-#   - GitHub repo with:
-#   - R script (`report_generator.R`)
-# - R Markdown report (`report.Rmd`)
-# - Sample output (PDF/HTML)
-# - README with instructions
-
 # --- LIBRARIES ----
 library(tidyverse)
 library(readr)
@@ -231,7 +216,6 @@ plot_temp <- ggplot(agg_location, aes(x = date, y = mean_temp, group = location,
        y = "Temperature in C°",
        color = "Location") +
   theme_minimal()
-plot_temp 
 
 
-plot_all_pollutants_temp_by_loc
+
